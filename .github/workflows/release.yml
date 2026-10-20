@@ -1,0 +1,86 @@
+name: release
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: release-${{ github.sha }}
+  cancel-in-progress: false
+
+env:
+  CARGO_INCREMENTAL: 0
+  CARGO_PROFILE_DEV_DEBUG: 0
+
+jobs:
+  build:
+    name: Build (${{ matrix.target }})
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    permissions:
+      actions: write
+      contents: read
+    defaults:
+      run:
+        shell: bash -euo pipefail {0}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-26
+            target: aarch64-apple-darwin
+            linux: false
+          - runner: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            linux: true
+          - runner: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-musl
+            linux: true
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          key: ${{ matrix.runner }}-${{ matrix.target }}
+      - name: Install Linux linkers
+        if: matrix.linux
+        run: sudo apt-get update && sudo apt-get install --yes mold musl-tools
+      - name: Install Rust target
+        run: rustup target add "${{ matrix.target }}"
+      - name: Test workspace
+        run: cargo test --workspace --locked
+      - name: Build release
+        env:
+          CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER: musl-gcc
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER: musl-gcc
+          RUSTFLAGS: ${{ matrix.linux && '-C link-arg=-fuse-ld=mold' || '' }}
+        run: cargo build --release --locked -p jaq --target "${{ matrix.target }}"
+      - name: Save release binary
+        run: cp "target/${{ matrix.target }}/release/jaq" "jaq-${{ matrix.target }}"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: jaq-${{ matrix.target }}
+          path: jaq-*
+
+  release:
+    name: Create pre-release
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: jaq-*
+          path: dist
+          merge-multiple: true
+      - name: Zip artifacts
+        run: for f in dist/*; do zip -9 --junk-paths "$f.zip" "$f"; done
+      - name: Create pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: release-${{ github.sha }}
+        run: gh release create "$RELEASE_TAG" dist/*.zip --repo "$GITHUB_REPOSITORY" --prerelease --target "$GITHUB_SHA" --title "$RELEASE_TAG"
