@@ -1,6 +1,5 @@
 mod cli;
 mod filter;
-mod funs;
 mod tests;
 #[cfg(target_os = "windows")]
 mod windows;
@@ -18,10 +17,6 @@ use jaq_all::load::{Color, FileReports, FileReportsDisp, Paint};
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
 use std::process::{ExitCode, Termination};
-
-#[cfg(feature = "mimalloc")]
-#[global_allocator]
-static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 extern crate alloc;
 

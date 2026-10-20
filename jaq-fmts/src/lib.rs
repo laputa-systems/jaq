@@ -10,10 +10,10 @@ extern crate std;
 pub mod read;
 pub mod write;
 
-#[cfg(feature = "all")]
+#[cfg(any(feature = "all", feature = "all-no-cbor"))]
 use jaq_core::native::{run, Fun};
 
-#[cfg(feature = "all")]
+#[cfg(any(feature = "all", feature = "all-no-cbor"))]
 /// (De-)Serialisation filters, such as `fromyaml`, `toxml`.
 pub fn funs<D: for<'a> jaq_core::DataT<V<'a> = jaq_json::Val>>() -> impl Iterator<Item = Fun<D>> {
     [read::funs::<D>(), write::funs::<D>()]
@@ -36,6 +36,7 @@ pub enum Format {
     #[default]
     Json,
     /// Concise Binary Object Representation
+    #[cfg(feature = "cbor")]
     Cbor,
     /// Tom's Obvious, Minimal Language
     Toml,
@@ -51,11 +52,16 @@ pub enum Format {
 
 impl Format {
     /// List of all currently supported formats.
-    pub const ALL: &str = "raw, raw0, json, cbor, yaml, toml, xml, csv, tsv";
+    pub const ALL: &str = if cfg!(feature = "cbor") {
+        "raw, raw0, json, cbor, yaml, toml, xml, csv, tsv"
+    } else {
+        "raw, raw0, json, yaml, toml, xml, csv, tsv"
+    };
 
     /// Determine a file format from a path.
     pub fn determine(path: &std::path::Path) -> Option<Self> {
         match path.extension()?.to_str()? {
+            #[cfg(feature = "cbor")]
             "cbor" => Some(Format::Cbor),
             "toml" => Some(Format::Toml),
             "xml" | "xhtml" => Some(Format::Xml),
@@ -70,6 +76,7 @@ impl Format {
     /// Parse a format name.
     pub fn parse(s: &str) -> Option<Self> {
         match s {
+            #[cfg(feature = "cbor")]
             "cbor" => Some(Format::Cbor),
             "raw" => Some(Format::Raw),
             "raw0" => Some(Format::Raw0),

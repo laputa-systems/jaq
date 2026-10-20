@@ -12,14 +12,11 @@ categories = ["command-line-utilities", "compilers", "parser-implementations"]
 rust-version = "1.70"
 
 [features]
-default = ["mimalloc"]
+cbor = ["jaq-all/cbor"]
 
 [dependencies]
-jaq-all  = { workspace = true, features = ["formats", "std-all"] }
+jaq-all  = { workspace = true, features = ["formats-no-cbor", "std-all"] }
 
-dirs = { version = "6.0" }
 env_logger = { version = "0.10.0", default-features = false }
 log = { version = "0.4.17" }
-mimalloc = { version = "0.1.29", default-features = false, optional = true }
-rustyline = { version = "13.0.0", default-features = false, features = ["with-file-history"] }
 tempfile = "3.3.0"

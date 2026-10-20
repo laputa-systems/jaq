@@ -2320,24 +2320,6 @@ However, when executing `inputs`, jq starts reading from standard input, so
 In contrast, jaq considers a file as being read even when it has only been opened.
 :::
 
-### `repl`
-
-The filter `repl` starts an interactive REPL (read-eval-print-loop).
-You can nest calls to `repl`; that is, you can run `repl` from inside a `repl`.
-Use CTRL-D to exit a REPL.
-
-This filter yields no output.
-It writes its history to a file `jaq-history` in the user's cache directory.
-
-::: Compatibility
-This filter has been inspired by `fq`'s `repl` filter.
-However, unlike `fq`, jaq does not require to be started with the `--repl` flag,
-and it allows calls to `repl` anywhere in a filter, not only last in the pipeline.
-
-`jq` does not have this filter.
-:::
-
-
 {#unsupported-stdlib}
 ## Unsupported
 

@@ -2,7 +2,6 @@
 //!
 //! This does not provide any filters from the standard library,
 //! not even very basic ones such as `length`.
-//! Note that jaq has a much nicer, in-built REPL via its `repl` filter.
 //!
 //! For history etc., consider running this with:
 //!

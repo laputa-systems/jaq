@@ -1,4 +1,6 @@
-use super::{cbor, tabular, toml, xml, yaml};
+use super::{tabular, toml, xml, yaml};
+#[cfg(feature = "cbor")]
+use super::cbor;
 use alloc::boxed::Box;
 use bytes::Bytes;
 use core::fmt;
@@ -11,6 +13,7 @@ use jaq_std::ValT as _;
 /// Deserialisation filters.
 pub fn funs<D: for<'a> DataT<V<'a> = Val>>() -> Box<[Filter<RunPtr<D>>]> {
     Box::new([
+        #[cfg(feature = "cbor")]
         ("fromcbor", v(0), |cv| {
             bmme(then(cv.1.try_as_bytes_owned(), |s| {
                 let fail = move |r: Result<_, _>| r.map_err(|e| parse_fail(&cv.1, "CBOR", e));
