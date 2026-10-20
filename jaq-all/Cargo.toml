@@ -13,6 +13,8 @@ rust-version = "1.70"
 [features]
 default = ["formats", "std-all"]
 formats = ["jaq-fmts/all"]
+formats-no-cbor = ["jaq-fmts/all-no-cbor"]
+cbor = ["jaq-fmts/cbor"]
 std-all = ["jaq-std/default"]
 
 [dependencies]

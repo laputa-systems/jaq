@@ -1,4 +1,6 @@
-use super::{cbor, tabular, toml, xml, yaml};
+use super::{tabular, toml, xml, yaml};
+#[cfg(feature = "cbor")]
+use super::cbor;
 use alloc::{boxed::Box, string::ToString, vec::Vec};
 use core::fmt;
 use jaq_core::box_iter::box_once;
@@ -21,6 +23,7 @@ macro_rules! ser {
 /// Serialisation filters.
 pub fn funs<D: for<'a> DataT<V<'a> = Val>>() -> Box<[Filter<RunPtr<D>>]> {
     Box::new([
+        #[cfg(feature = "cbor")]
         ("tocbor", v(0), |cv| {
             let mut buf = Vec::new();
             cbor::write(&mut buf, &cv.1).unwrap();

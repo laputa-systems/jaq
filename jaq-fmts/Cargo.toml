@@ -13,6 +13,7 @@ rust-version = "1.70"
 [features]
 default = ["all"]
 all = ["cbor", "toml", "xml", "yaml", "tabular"]
+all-no-cbor = ["toml", "xml", "yaml", "tabular"]
 
 cbor = ["ciborium-ll", "ciborium-io"]
 toml = ["toml-span"]

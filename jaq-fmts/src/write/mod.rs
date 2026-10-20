@@ -11,13 +11,13 @@ pub mod xml;
 pub mod yaml;
 pub use jaq_json::write as json;
 
-#[cfg(feature = "all")]
+#[cfg(any(feature = "all", feature = "all-no-cbor"))]
 mod formats;
-#[cfg(feature = "all")]
+#[cfg(any(feature = "all", feature = "all-no-cbor"))]
 mod funs;
-#[cfg(feature = "all")]
+#[cfg(any(feature = "all", feature = "all-no-cbor"))]
 pub use formats::write;
-#[cfg(feature = "all")]
+#[cfg(any(feature = "all", feature = "all-no-cbor"))]
 pub use funs::funs;
 
 use std::io::{self, IsTerminal, Write};

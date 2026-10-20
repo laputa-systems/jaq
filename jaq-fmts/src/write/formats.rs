@@ -25,6 +25,7 @@ pub fn write(w: &mut dyn Write, writer: &Writer, val: &Val) -> Result {
             return Err(io::Error::new(io::ErrorKind::InvalidData, nul_err));
         }
         (Val::BStr(b) | Val::TStr(b), Format::Raw | Format::Raw0) => w.write_all(b)?,
+        #[cfg(feature = "cbor")]
         (_, Format::Cbor) => cbor::write(w, val)?,
         (_, Format::Json | Format::Raw | Format::Raw0) => jaq_json::write::write(w, pp, 0, val)?,
         (_, Format::Yaml) => yaml::write(w, pp, 0, val)?,
@@ -35,7 +36,9 @@ pub fn write(w: &mut dyn Write, writer: &Writer, val: &Val) -> Result {
     };
 
     w.write_all(match format {
-        Format::Cbor | Format::Toml => b"",
+        Format::Toml => b"",
+        #[cfg(feature = "cbor")]
+        Format::Cbor => b"",
         Format::Raw0 => b"\0",
         Format::Yaml | Format::Csv | Format::Tsv => b"\n",
         _ if *join => b"",

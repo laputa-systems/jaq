@@ -1,5 +1,5 @@
 //! Filter parsing, compilation, and execution.
-use crate::{funs, read, Error, Runner, Val};
+use crate::{read, Error, Runner, Val};
 use jaq_all::data::Filter;
 use jaq_all::jaq_core::{compile, load, Exn, ValT, Vars};
 use jaq_all::load::{compile_errors, load_errors, FileReports};
@@ -35,7 +35,7 @@ pub fn parse_compile(
     .map_err(load_errors)?;
 
     let compiler = Compiler::default()
-        .with_funs(funs::funs())
+        .with_funs(jaq_all::data::funs())
         .with_global_vars(vars.iter().map(|v| &**v));
     let filter = compiler.compile(modules).map_err(compile_errors)?;
     Ok((vals, filter))
