@@ -1,8 +1,6 @@
 mod cli;
 mod filter;
 mod tests;
-#[cfg(target_os = "windows")]
-mod windows;
 
 use cli::{Cli, Format};
 use core::fmt::{self, Display, Formatter};

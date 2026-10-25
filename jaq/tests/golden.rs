@@ -13,8 +13,6 @@ fn golden_test(args: &[&str], input: &str, out_ex: &str) -> io::Result<()> {
     assert!(output.status.success());
 
     let out_act = str::from_utf8(&output.stdout).expect("invalid UTF-8 in output");
-    // remove '\r' from output for compatibility with Windows
-    let out_act = out_act.replace('\r', "");
     if out_ex.trim() != out_act.trim() {
         println!("Expected output:\n{}\n---", out_ex);
         println!("Actual output:\n{}\n---", out_act);

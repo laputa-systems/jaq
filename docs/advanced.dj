@@ -536,7 +536,7 @@ Every global and local search path is substituted as follows:
 
 - If it starts with `~`, then
   `~` is substituted with the user's home directory,
-  given by the environment variable `HOME` on Linux and `USERPROFILE` on Windows.
+  given by the environment variable `HOME`.
 - If it starts with `$ORIGIN`, then
   `$ORIGIN` is substituted by the directory in which the `jaq` executable resides.
 

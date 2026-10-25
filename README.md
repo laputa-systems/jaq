@@ -54,7 +54,7 @@ jaq focuses on three goals:
 
 ## Binaries
 
-You can download binaries for Linux, Mac, and Windows on the [releases page](https://github.com/01mf02/jaq/releases).
+You can download binaries for Linux and Mac on the [releases page](https://github.com/01mf02/jaq/releases).
 On a Linux system, you can download it using the following commands:
 
     $ curl -fsSL https://github.com/01mf02/jaq/releases/latest/download/jaq-$(uname -m)-unknown-linux-musl -o jaq && chmod +x jaq
