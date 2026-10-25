@@ -186,13 +186,8 @@ impl Cli {
     }
 
     fn color_if(&self, f: impl Fn() -> bool) -> bool {
-        #[cfg(not(target_os = "windows"))]
-        let enabled = || true;
-        #[cfg(target_os = "windows")]
-        let enabled = || crate::windows::enable_ansi_support();
-
         let no_color = || std::env::var("NO_COLOR").is_ok_and(|v| !v.is_empty());
-        !self.monochrome_output && (self.color_output || (!no_color() && f())) && enabled()
+        !self.monochrome_output && (self.color_output || (!no_color() && f()))
     }
 
     pub fn color_output(&self) -> bool {

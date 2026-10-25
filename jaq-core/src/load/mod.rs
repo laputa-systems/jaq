@@ -256,9 +256,6 @@ impl<'a> Import<'a, &'a str, PathBuf> {
         }
         rel.set_extension(ext);
 
-        #[cfg(target_os = "windows")]
-        let home = "USERPROFILE";
-        #[cfg(not(target_os = "windows"))]
         let home = "HOME";
 
         use std::env;
