@@ -1,14 +1,14 @@
 # jaq
 
-![Build status](https://github.com/01mf02/jaq/actions/workflows/check.yml/badge.svg)
+![Build status](https://github.com/laputa-systems/jaq/actions/workflows/test.yml/badge.svg)
 [![Crates.io](https://img.shields.io/crates/v/jaq-core.svg)](https://crates.io/crates/jaq-core)
 [![Documentation](https://docs.rs/jaq-core/badge.svg)](https://docs.rs/jaq-core)
-[![Rust 1.69+](https://img.shields.io/badge/rust-1.69+-orange.svg)](https://www.rust-lang.org)
 
 jaq (pronounced /ʒaːk/, like *Jacques*[^jacques]) is a clone of
 the JSON data processing tool [`jq`](https://jqlang.github.io/jq/).
 It has a few features not present in `jq`, such as
-support for the data formats YAML, CBOR, TOML, and XML.
+support for YAML, TOML, and XML.
+CBOR is included only when the `jaq` binary is built with `--features cbor`.
 jaq has an own [manual](https://gedenkt.at/jaq/manual/).
 You can try jaq on the [playground](https://gedenkt.at/jaq/).
 
@@ -32,7 +32,8 @@ jaq focuses on three goals:
   which amounts to about 50ms on my machine.
   This can be particularly seen when processing a large number of small files.
   Although the startup time has been vastly improved in jq 1.7,
-  jaq is still faster than jq on many other [benchmarks](#performance).
+  this tree does not repeat the upstream benchmark table.
+  See [Performance](#performance).
 * **Simplicity**:
   jaq aims to have a simple and small implementation, in order to
   reduce the potential for bugs and to
@@ -54,106 +55,38 @@ jaq focuses on three goals:
 
 ## Binaries
 
-You can download binaries for Linux and Mac on the [releases page](https://github.com/01mf02/jaq/releases).
-On a Linux system, you can download it using the following commands:
+This repository does not publish Windows builds.
+The `release` workflow runs only when dispatched by hand.
+It uploads pre-release zips named:
 
-    $ curl -fsSL https://github.com/01mf02/jaq/releases/latest/download/jaq-$(uname -m)-unknown-linux-musl -o jaq && chmod +x jaq
+- `jaq-aarch64-apple-darwin.zip`
+- `jaq-x86_64-unknown-linux-musl.zip`
+- `jaq-aarch64-unknown-linux-musl.zip`
 
-You may also install jaq using [homebrew](https://formulae.brew.sh/formula/jaq) on macOS or Linux:
+The tag is `release-<git sha>`.
+GitHub's latest-release URL skips pre-releases, so it does not point at these tags.
 
-    $ brew install jaq
-    $ brew install --HEAD jaq # latest development version
+[Homebrew](https://formulae.brew.sh/formula/jaq), `cargo install --locked jaq`, and the files on [01mf02/jaq releases](https://github.com/01mf02/jaq/releases) are upstream jaq, not this tree.
 
-[![Packaging status](https://repology.org/badge/vertical-allrepos/jaq.svg)](https://repology.org/project/jaq/versions)
+## From source
 
+`rust-toolchain.toml` pins `nightly-2026-09-15`.
+In this directory, `rustup` installs that compiler.
 
-## From Source
+    $ cargo build --release --locked -p jaq
+    $ cargo install --locked --path jaq
 
-To compile jaq, you need a Rust toolchain.
-See <https://rustup.rs/> for instructions.
-
-Any of the following commands install jaq:
-
-    $ cargo install --locked jaq
-    $ cargo install --locked --git https://github.com/01mf02/jaq # latest development version
-
-On my system, both commands place the executable at `~/.cargo/bin/jaq`.
-
-If you have cloned this repository, you can also build jaq by executing one of the commands in the cloned repository:
-
-    $ cargo build --release # places binary into target/release/jaq
-    $ cargo install --locked --path jaq # installs binary
-
-jaq should work on any system supported by Rust.
-If it does not, please file an issue.
+The binary is `target/release/jaq`.
+Add `--features cbor` to either command to include CBOR.
+Windows is not a supported target.
 
 
 
 # Performance
 
-The following evaluation consists of several benchmarks that
-allow comparing the performance of jaq, jq, and [gojq].
-The `empty` benchmark runs `n` times the filter `empty` with null input,
-serving to measure the startup time.
-The `bf-fib` benchmark runs a Brainfuck interpreter written in jq,
-interpreting a Brainfuck script that produces `n` Fibonacci numbers.
-The other benchmarks evaluate various filters with `n` as input;
-see [`bench.sh`](bench.sh) for details.
-
-I generated the benchmark data with
-`bench.sh target/release/jaq jq-1.8.1 gojq-0.12.17 | tee bench.json`
-on a Linux system with an AMD Ryzen 5 5500U.[^binaries]
-I then processed the results with a "one-liner" (stretching the term and the line a bit):
-
-    jq -rs '.[] | "|`\(.name)`|\(.n)|" + ([.time[] | min | (.*1000|round)? // "N/A"] | min as $total_min | map(if . == $total_min then "**\(.)**" else "\(.)" end) | join("|"))' bench.json
-
-(Of course, you can also use jaq here instead of jq.)
-Finally, I concatenated the table header with the output and piped it through `pandoc -t gfm`.
-
-[^binaries]: jq-1.8.1 was installed from the official Arch Linux package and gojq-0.12.18 was retrieved from its GitHub release page.
-
-Table: Evaluation results in milliseconds ("N/A" if error or more than 10 seconds).
-
-| Benchmark       |       n | jaq-3.0 | jq-1.8.1 | gojq-0.12.18 |
-|-----------------|--------:|--------:|---------:|-------------:|
-| `empty`         |     512 |     410 |      430 |      **270** |
-| `bf-fib`        |      13 | **530** |     1030 |      **530** |
-| `defs`          |  100000 |  **50** |      N/A |          960 |
-| `upto`          |    8192 |   **0** |      440 |          450 |
-| `reduce-update` |   16384 |   **0** |      720 |         1320 |
-| `reverse`       | 1048576 |  **30** |      440 |          300 |
-| `sort`          | 1048576 |  **90** |      430 |          550 |
-| `group-by`      | 1048576 | **260** |     1790 |         1580 |
-| `min-max`       | 1048576 | **180** |      200 |          300 |
-| `add`           | 1048576 | **390** |      520 |         1290 |
-| `kv`            |  131072 | **110** |      120 |          280 |
-| `kv-update`     |  131072 | **130** |      440 |          550 |
-| `kv-entries`    |  131072 | **520** |      980 |          870 |
-| `ex-implode`    | 1048576 |     600 |      890 |      **560** |
-| `reduce`        | 1048576 |     740 |  **700** |          N/A |
-| `try-catch`     | 1048576 |     220 |  **200** |          390 |
-| `repeat`        | 1048576 | **170** |      610 |          500 |
-| `from`          | 1048576 | **340** |      730 |          550 |
-| `last`          | 1048576 |  **20** |      150 |          170 |
-| `pyramid`       |  524288 |     300 |  **250** |          470 |
-| `tree-contains` |      23 |  **90** |      830 |          230 |
-| `tree-flatten`  |      17 |     700 |      330 |       **10** |
-| `tree-update`   |      17 | **430** |      910 |         1830 |
-| `tree-paths`    |      17 | **140** |      230 |          780 |
-| `to-fromjson`   |   65536 |  **50** |      350 |          100 |
-| `ack`           |       7 |     570 |  **490** |          540 |
-| `range-prop`    |     128 |     370 |      250 |      **210** |
-| `cumsum`        | 1048576 | **240** |      250 |          510 |
-| `cumsum-xy`     | 1048576 |     380 |  **350** |          750 |
-| `str-slice`     |    8192 |     170 |      650 |      **120** |
-
-The results show that
-jaq-3.0 is fastest on 20 benchmarks, whereas
-jq-1.8.1 is fastest on 5 benchmarks and
-gojq-0.12.18 is fastest on 6 benchmarks.
-gojq is much faster on `tree-flatten` because it implements the filter `flatten` natively instead of by definition.
-
-[gojq]: https://github.com/itchyny/gojq
+[`bench.sh`](bench.sh) compares a jaq binary with jq and gojq.
+The table that used to be here was measured on upstream jaq 3.0, which linked mimalloc.
+This tree uses the system allocator and does not include that table.
 
 
 # Security

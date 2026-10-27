@@ -28,8 +28,9 @@ jaq determines the format to parse a _FILE_ as follows:
 
 - If [`--from`](#--from) _FORMAT_ is used, jaq uses that format.
 - Otherwise, if _FILE_ has a file extension known by jaq, such as
-  `.json`, `.yaml`, `.cbor`, `.toml`, `.xml`, `.csv`, `.tsv`,
+  `.json`, `.yaml`, `.toml`, `.xml`, `.csv`, `.tsv`,
   jaq uses the corresponding format.
+  The `.cbor` extension is recognized only when jaq is built with `--features cbor`.
 - Otherwise, jaq assumes JSON.
 
 {#--from}
@@ -39,13 +40,15 @@ Interpret all input files as _FORMAT_.
 For example,
 `jaq --from yaml . myfile.yml`
 parses `myfile.yml` as YAML.
-Possible values of _FORMAT_ include:
-`raw`, `raw0`, `json`, `yaml`, `cbor`, `toml`, `xml`, `csv`, `tsv`.
+Possible values of _FORMAT_ for the default binary are
+`raw`, `raw0`, `json`, `yaml`, `toml`, `xml`, `csv`, `tsv`.
+`cbor` is accepted only when jaq is built with `--features cbor`.
+The same list is `Format::ALL` in `jaq-fmts/src/lib.rs`.
 
 jaq automatically chooses the corresponding input format for
 files with the extensions
-`.json`, `.yaml`, `.yml`, `.cbor`, `.toml`, `.xml`, `.xhtml`, `.csv`, `.tsv`.
-That means that
+`.json`, `.yaml`, `.yml`, `.toml`, `.xml`, `.xhtml`, `.csv`, `.tsv`.
+With `--features cbor`, `.cbor` is included, and
 `jaq --from cbor . myfile.cbor` is equivalent to
 `jaq . myfile.cbor`.
 

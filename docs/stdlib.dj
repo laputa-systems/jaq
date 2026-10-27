@@ -1647,6 +1647,9 @@ a text string containing the current value encoded as YAML.
 
 ### `fromcbor`, `tocbor`
 
+These filters are absent unless jaq is built with `--features cbor`.
+See [CBOR](#cbor).
+
 The filter `fromcbor` takes a byte string and parses it as sequence of
 [CBOR](#cbor) values.
 For example:

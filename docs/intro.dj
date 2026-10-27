@@ -5,7 +5,7 @@ which is the reference interpreter for the jq language written in C.
 Written in Rust, jaq focuses on correctness, high performance, and simplicity.
 In addition, jaq adds some functionality not present in `jq`:
 
-- Support for multiple file [formats](#formats), including JSON, YAML, CBOR, TOML, XML
+- Support for multiple file [formats](#formats), including JSON, YAML, TOML, and XML. CBOR is included only when the `jaq` binary is built with `--features cbor`
 - Support for invalid UTF-8 code units in [text strings](#text-strings)
 - [Byte strings](#byte-strings)
 - [Objects](#objects) with non-string keys, such as `{0: 1, [2]: 3}`

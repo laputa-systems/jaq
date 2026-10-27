@@ -169,6 +169,12 @@ load the full input into memory before parsing it.
 
 ## CBOR
 
+The default `jaq` binary does not include CBOR.
+Build with `cargo build -p jaq --features cbor` to enable
+`--from cbor`, `--to cbor`, the `.cbor` extension, and `fromcbor` / `tocbor`.
+`jaq-fmts` includes CBOR in its default `all` feature.
+`all-no-cbor` leaves it out. The `jaq` crate depends on `formats-no-cbor`.
+
 [CBOR](https://cbor.io/) (Concise Binary Object Representation)
 is a binary format specified in
 [RFC 8949](https://www.rfc-editor.org/rfc/rfc8949.html).
