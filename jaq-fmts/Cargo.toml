@@ -41,4 +41,6 @@ toml-span = { version = "0.7.0", optional = true }
 xmlparser = { version = "0.13.6", optional = true }
 
 [dev-dependencies]
+jaq-json = { workspace = true, features = ["serde"] }
+jaq-std = { workspace = true, features = ["std", "format", "log", "math", "regex", "time"] }
 serde_json = "1.0"

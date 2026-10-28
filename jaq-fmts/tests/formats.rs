@@ -13,6 +13,7 @@ pub fn decode_hex(s: &str) -> Result<Vec<u8>, ParseIntError> {
         .collect()
 }
 
+#[cfg(feature = "cbor")]
 fn jc(json: &str, cbor_hex: &str) {
     //dbg!(json);
     let json_val = unwrap_collect(read::json::parse_many(json.as_bytes()));
@@ -32,12 +33,14 @@ fn jc(json: &str, cbor_hex: &str) {
     assert_eq!(cbor_val, cbor_val2);
 }
 
+#[cfg(feature = "cbor")]
 fn cbor_fail(cbor_hex: &str) {
     let cbor_bin = decode_hex(cbor_hex).unwrap();
     let iter = read::cbor::parse_many(&cbor_bin);
     assert!(iter.collect::<Result<Vec<_>, _>>().is_err())
 }
 
+#[cfg(feature = "cbor")]
 #[test]
 fn cbor() {
     jc("0", "00");

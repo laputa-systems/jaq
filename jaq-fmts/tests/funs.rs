@@ -3,8 +3,11 @@ pub mod common;
 use serde_json::json;
 
 // 41 = 0x29
+#[cfg(feature = "cbor")]
 yields!(fromcbor1, "[41] | tobytes | fromcbor", -10);
+#[cfg(feature = "cbor")]
 yields!(fromcbor2, "[99, 230, 176, 180] | tobytes | fromcbor", "水");
+#[cfg(feature = "cbor")]
 yields!(tocbor, "-10 | tocbor | . == ([41] | tobytes)", true);
 
 // "---" starts a new value, "..." ends a previous value
