@@ -8,7 +8,7 @@ readme = "../README.md"
 description = "Multi-format support for jaq"
 repository = "https://github.com/01mf02/jaq"
 keywords = ["jq"]
-rust-version = "1.70"
+rust-version = "1.85"
 
 [features]
 default = ["all"]

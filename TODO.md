@@ -1,15 +1,6 @@
 Prefix: JAQ
 Next: 4
 
-### JAQ-1 · P3 · Declared Rust 1.70 does not match the lockfile
-
-- **Area:** Build
-- **Where:** `jaq-core/Cargo.toml:12`, `jaq/Cargo.toml:12`, `jaq-std/Cargo.toml:11`, `jaq-json/Cargo.toml:12`, `jaq-fmts/Cargo.toml:11`, `jaq-all/Cargo.toml:11`, `Cargo.lock:217`, `Cargo.lock:239`, `Cargo.lock:251`
-- **Problem:** Every crate manifest says `rust-version` 1.69 (`jaq-core`) or 1.70 (the others). `cargo update` in this fork moved `hashbrown` to 0.17.1, `indexmap` to 2.14.2, and `getrandom` to 0.4.3. Those crates set edition 2024 and `rust-version` 1.85. `cargo tree -p jaq` shows `hashbrown` under `jaq-json` and `getrandom` under `tempfile`, so the CLI build needs them. A compiler that honors the declared floor cannot compile this lockfile. The pinned toolchain is `nightly-2026-09-15`, and `cargo check -p jaq --locked --offline` succeeded there. Rust 1.70 was not installed here, so that floor was not executed.
-- **Recommendation:** Pick one floor. Either set every crate `rust-version` to at least 1.85, or pin `hashbrown`, `indexmap`, and `getrandom` back to releases that still compile on the version you claim.
-- **Fix with:** upgrade
-- **Effort:** S
-
 ### JAQ-2 · P3 · Workspace tests do not build the binary this tree ships
 
 - **Area:** Tests
