@@ -21,7 +21,7 @@ fn main() -> io::Result<()> {
     let fi = |e| Error::new(ErrorKind::InvalidData, e);
 
     data::run(&runner, &filter, vars, input, fi, |v| {
-        let v = unwrap_valr(v).map_err(|e| Error::new(ErrorKind::Other, e.to_string()));
+        let v = unwrap_valr(v).map_err(|e| Error::other(e.to_string()));
         fmts::write::write(stdout, &runner.writer, &v?)
     })
 }

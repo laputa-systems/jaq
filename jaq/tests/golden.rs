@@ -16,10 +16,7 @@ fn golden_test(args: &[&str], input: &str, out_ex: &str) -> io::Result<()> {
     if out_ex.trim() != out_act.trim() {
         println!("Expected output:\n{}\n---", out_ex);
         println!("Actual output:\n{}\n---", out_act);
-        return Err(io::Error::new(
-            io::ErrorKind::Other,
-            "incorrect test output",
-        ));
+        return Err(io::Error::other("incorrect test output"));
     }
     Ok(())
 }
