@@ -43,3 +43,6 @@ Remaining options:
   -h, --help                Print help
 
 Full documentation: <https://gedenkt.at/jaq/manual/>
+
+Note: the default binary has no `repl` filter and no CBOR support.
+Build with `--features cbor` for CBOR formats.
