@@ -61,7 +61,7 @@ jobs:
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: jaq-${{ matrix.target }}
-          path: jaq-*
+          path: jaq-${{ matrix.target }}
 
   release:
     name: Create pre-release
@@ -237,7 +237,10 @@ jobs:
       - name: Zip artifacts
         run: |
           rm -f dist/*.zip
-          for f in dist/*; do zip -9 --junk-paths "$f.zip" "$f"; done
+          for f in dist/*; do
+            [ -f "$f" ] || continue
+            zip -9 --junk-paths "$f.zip" "$f"
+          done
       - name: Create pre-release
         env:
           GH_TOKEN: ${{ github.token }}
