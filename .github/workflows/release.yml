@@ -322,12 +322,12 @@ jobs:
               raise SystemExit(main())
           PY
 
-      - name: Zip artifacts
+      - name: Archive artifacts
         run: |
-          rm -f dist/*.zip
           for f in dist/*; do
             [ -f "$f" ] || continue
-            zip -9 --junk-paths "$f.zip" "$f"
+            chmod 0755 "$f"
+            tar --sort=name --mtime=@0 --owner=0 --group=0 --numeric-owner -cJf "$f.tar.xz" -C dist "$(basename "$f")"
           done
 
       - name: Write release notes
@@ -358,4 +358,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: release-${{ github.sha }}
-        run: gh release create "$RELEASE_TAG" dist/*.zip --repo "$GITHUB_REPOSITORY" --prerelease --notes-file "$RUNNER_TEMP/release-notes.md" --target "$GITHUB_SHA" --title "$RELEASE_TAG"
+        run: gh release create "$RELEASE_TAG" dist/*.tar.xz --repo "$GITHUB_REPOSITORY" --prerelease --notes-file "$RUNNER_TEMP/release-notes.md" --target "$GITHUB_SHA" --title "$RELEASE_TAG"

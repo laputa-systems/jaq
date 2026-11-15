@@ -57,11 +57,11 @@ jaq focuses on three goals:
 
 This repository does not publish Windows builds.
 The `release` workflow runs only when dispatched by hand.
-It uploads pre-release zips named:
+It uploads pre-release archives named:
 
-- `jaq-aarch64-apple-darwin.zip`
-- `jaq-x86_64-unknown-linux-musl.zip`
-- `jaq-aarch64-unknown-linux-musl.zip`
+- `jaq-aarch64-apple-darwin.tar.xz`
+- `jaq-x86_64-unknown-linux-musl.tar.xz`
+- `jaq-aarch64-unknown-linux-musl.tar.xz`
 
 The tag is `release-<git sha>`.
 GitHub's latest-release URL skips pre-releases, so it does not point at these tags.
