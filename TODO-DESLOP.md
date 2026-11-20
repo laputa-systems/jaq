@@ -9,16 +9,9 @@ Base: `ac261459a1e70af07d7495f0d14af4806e665c22`; upstream merge base: `d65e5a6c
 
 Types: no stricter setting adopted; no fork-owned defect or deleted escape hatch was demonstrated. The candidate run reported one unsafe memory map; 41 wildcard enum matches, 2 single-variant wildcard matches, 6 possible truncations, 2 sign-loss casts, 43 source unwraps (34 more in tests/examples), no source expects (1 in tests/examples), 1 source redundant clone (2 more in tests/examples), and 8 pass-by-value warnings. These counts are diagnostic occurrences, excluding Cargo's duplicate summaries; warnings alone do not establish defects. The memory map is upstream; the fork's help tests use unwraps. The existing profile remains clean; the Rust escape-hatch search matched 93 lines before and after.
 
+Tests: workspace tests increased from 386 to 388. Reported suite execution sums were 2.87s before and 2.09s after on a busy host; `make test` was 7.87s before and 30.74s after. Injected faults caught: select `USERPROFILE` instead of `HOME` (module lookup failed), enable CBOR in the default dependency graph (default rejection check failed), emit byte `00` instead of CBOR `01` (exact-output test failed), make `repl` succeed (exit-code assertion failed), and alter the help footer (footer assertion failed). All faults were restored. Needs environment: line and branch coverage and automated mutant counts were not measured because cargo-llvm-cov and cargo-mutants are unavailable; no mutation CI lane was added under the owner ruling.
+
 ## Tickets
-
-### DSLP-4 · P2 · Tests: coverage, boundary gaps, mutation
-
-- **Area:** deslop · tests
-- **Where:** test suites and CI
-- **Problem:** Coverage and mutation results are unmeasured; no deslop mutation lane exists.
-- **Recommendation:** Run the deslop Tests step. Accept: no undispositioned survivor in critical code, the test cost budget holds, and the lane is green where the tools are mirrored.
-- **Fix with:** deslop
-- **Effort:** M
 
 ### DSLP-5 · P2 · Dead code: tools and debloat
 

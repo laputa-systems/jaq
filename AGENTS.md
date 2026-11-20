@@ -25,12 +25,16 @@ jq implementation in this workspace. The CLI crate is `jaq`. The libraries are `
 
 ## Verification
 
-- `make test` runs the workspace tests (386 passed; warm 7.87s on a busy host).
+- `make test` checks the default CLI and runs the workspace tests (388 passed; 30.74s on a busy host).
 - `make lint` runs workspace clippy with warnings denied (cold 492.76s on a busy host).
+- Edit: `cargo test --locked -p jaq --test distribution` checks module lookup (0.26s test time).
+- Change: `cargo test --locked -p jaq --features cbor --test distribution` checks CBOR output (0.27s test time).
 - CLI help and version: `jaq/tests/help.rs`; filter output: `jaq/tests/golden.rs`.
+- Removed `repl` filter: `jaq/tests/distribution.rs`.
+- Default CBOR rejection: `make test` builds the default CLI before workspace features are unified.
 - CLI exit codes and remaining flags: no comprehensive boundary suite.
 - Library filter evaluation and paths: `jaq-core/tests/`; JSON: `jaq-json/tests/`.
 - CBOR, TOML and XML: `jaq-fmts/tests/formats.rs`; other formats: `jaq-fmts/tests/funs.rs`.
-- Module search path expansion: no dedicated boundary test.
+- Module search path expansion: `jaq/tests/distribution.rs`.
 - Library consumers include `jaq`, `jaq-play`, and the other workspace crates.
 - Performance workload: `bench.sh` and `examples/benches.json`; no regression gate.
