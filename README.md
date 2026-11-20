@@ -1,6 +1,6 @@
 # jaq
 
-![Build status](https://github.com/laputa-systems/jaq/actions/workflows/test.yml/badge.svg)
+![Build status](https://github.com/laputa-systems/jaq/actions/workflows/ci.yml/badge.svg)
 [![Crates.io](https://img.shields.io/crates/v/jaq-core.svg)](https://crates.io/crates/jaq-core)
 [![Documentation](https://docs.rs/jaq-core/badge.svg)](https://docs.rs/jaq-core)
 
@@ -70,7 +70,7 @@ GitHub's latest-release URL skips pre-releases, so it does not point at these ta
 
 ## From source
 
-`rust-toolchain.toml` pins `nightly-2026-09-15`.
+`rust-toolchain.toml` pins `nightly-2026-11-09`.
 In this directory, `rustup` installs that compiler.
 
     $ cargo build --release --locked -p jaq
@@ -87,6 +87,17 @@ Windows is not a supported target.
 [`bench.sh`](bench.sh) compares a jaq binary with jq and gojq.
 The table that used to be here was measured on upstream jaq 3.0, which linked mimalloc.
 This tree uses the system allocator and does not include that table.
+
+`make bench` checks the benchmark driver's selection rules. `make bench-list`
+lists its tiers, and `make bench-dry-run TIER=change WORKLOAD=upto` prints a
+selection without running it. Build the binary with `cargo build --release
+--locked -p jaq`, then use `make bench-check TIER=change WORKLOAD=upto` and
+`make bench TIER=change WORKLOAD=upto` for the bounded array workload. Results
+are written under `.work/tmp`; completion alone is not a performance verdict.
+On the observed macOS arm64 run, Edit took 0.08s and Change took 0.48s after
+the release build; build time was 380.51s on a busy host.
+The upstream full harness requires Linux and runs only by explicit request with
+`make bench TIER=full ALLOW_FULL=1`. It has no output oracle or regression gate.
 
 
 # Security
