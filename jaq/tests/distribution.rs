@@ -37,4 +37,3 @@ fn cbor_feature_encodes_values() -> Result<(), Box<dyn std::error::Error>> {
     assert_eq!(output.stdout, [1]);
     Ok(())
 }
-
