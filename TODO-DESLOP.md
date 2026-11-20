@@ -1,5 +1,5 @@
 Prefix: DSLP
-Next: 6
+Next: 7
 
 Deslop campaign backlog ([plan](https://github.com/laputa-systems/stuff/blob/main/docs/campaigns/deslop.md), tier E). One agent works this file with the `deslop` skill: take the lowest-numbered open ticket whose area does not start with `Needs owner ·`. After DSLP-5, work the open P1 and P2 findings, then fill in `## Report` below.
 
@@ -11,14 +11,16 @@ Types: no stricter setting adopted; no fork-owned defect or deleted escape hatch
 
 Tests: workspace tests increased from 386 to 388. Reported suite execution sums were 2.87s before and 2.09s after on a busy host; `make test` was 7.87s before and 30.74s after. Injected faults caught: select `USERPROFILE` instead of `HOME` (module lookup failed), enable CBOR in the default dependency graph (default rejection check failed), emit byte `00` instead of CBOR `01` (exact-output test failed), make `repl` succeed (exit-code assertion failed), and alter the help footer (footer assertion failed). All faults were restored. Needs environment: line and branch coverage and automated mutant counts were not measured because cargo-llvm-cov and cargo-mutants are unavailable; no mutation CI lane was added under the owner ruling.
 
+Dead code: rustc `dead_code` is covered by warnings-denied workspace clippy; a separate `unreachable_pub` check reported 13 CLI and 35 library diagnostics on upstream declarations. No fork-owned removal was established, and no code or dependencies were removed. Needs environment: cargo-machete and cargo-udeps are unavailable. The upstream `jaq/tests/repl.exp` fixture has no remaining registration after this fork removed the filter; it is outside the authorized edit scope.
+
 ## Tickets
 
-### DSLP-5 · P2 · Dead code: tools and debloat
+### DSLP-6 · P2 · Bench: audit and selective entry point
 
-- **Area:** deslop · dead code
-- **Where:** whole repository (our changes)
-- **Problem:** No dead-code scan has run.
-- **Recommendation:** Run the deslop Dead code step. Accept: tools clean or allowlisted with reasons; walk-backs filed as Needs owner tickets.
+- **Area:** deslop · bench
+- **Where:** bench.sh, examples/benches.json, Makefile
+- **Problem:** The existing upstream benchmark harness has not been audited or given a selective entry point in this fork.
+- **Recommendation:** Run the deslop Bench step, preserving upstream code and proving Edit and one Change workload.
 - **Fix with:** deslop
 - **Effort:** M
 
