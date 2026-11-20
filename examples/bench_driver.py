@@ -113,17 +113,20 @@ def main():
         start = time.monotonic()
         with (directory / "upstream.log").open("w") as output:
             result = subprocess.run(["bash", str(ROOT / "bench.sh"), str(BINARY)], cwd=ROOT, stdout=output, stderr=subprocess.STDOUT)
+        validation_error = None
         if result.returncode == 0:
             try:
                 expected = {"empty", "bf-fib", "defs"} | {json.loads(line)["name"] for line in (ROOT / "examples/benches.json").read_text().splitlines() if line.strip() and not line.startswith("#")}
                 validate_records((directory / "upstream.log").read_text(), expected)
             except (KeyError, TypeError, ValueError) as error:
-                raise ValueError(f"upstream results are incomplete: {error}; see {directory / 'upstream.log'}") from error
-        report = {"workload": "upstream", "seconds": time.monotonic() - start, "exit": result.returncode, "performance_verdict": "not measured"}
+                validation_error = str(error)
+        report = {"workload": "upstream", "seconds": time.monotonic() - start, "exit": result.returncode, "validation_error": validation_error, "performance_verdict": "not measured"}
         (directory / "result.json").write_text(json.dumps(report, indent=2) + "\n")
         print(json.dumps({**report, "result": str(directory / "result.json")}))
         if result.returncode:
             raise ValueError(f"upstream failed with exit {result.returncode}; see {directory / 'upstream.log'}")
+        if validation_error:
+            raise ValueError(f"upstream results are incomplete: {validation_error}; see {directory / 'upstream.log'}")
     else:
         raise ValueError("no workload selected")
 
