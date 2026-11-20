@@ -9,15 +9,6 @@ Not started.
 
 ## Tickets
 
-### DSLP-2 · P2 · Diagnose: ultrareview into this backlog
-
-- **Area:** deslop · diagnose
-- **Where:** whole repository (our changes against upstream)
-- **Problem:** No review has ranked this repository's risks for the deslop pass.
-- **Recommendation:** Run the deslop Diagnose step. Accept: the diff touches only docs, comments, and this file, and every finding names its Fix with.
-- **Fix with:** deslop
-- **Effort:** S
-
 ### DSLP-3 · P2 · Types: strict profile and typing findings
 
 - **Area:** deslop · types

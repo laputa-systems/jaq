@@ -1,6 +1,6 @@
 # jaq
 
-![Build status](https://github.com/laputa-systems/jaq/actions/workflows/test.yml/badge.svg)
+![Build status](https://github.com/laputa-systems/jaq/actions/workflows/ci.yml/badge.svg)
 [![Crates.io](https://img.shields.io/crates/v/jaq-core.svg)](https://crates.io/crates/jaq-core)
 [![Documentation](https://docs.rs/jaq-core/badge.svg)](https://docs.rs/jaq-core)
 
@@ -70,7 +70,7 @@ GitHub's latest-release URL skips pre-releases, so it does not point at these ta
 
 ## From source
 
-`rust-toolchain.toml` pins `nightly-2026-09-15`.
+`rust-toolchain.toml` pins `nightly-2026-11-09`.
 In this directory, `rustup` installs that compiler.
 
     $ cargo build --release --locked -p jaq
