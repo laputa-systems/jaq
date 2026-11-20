@@ -1,4 +1,20 @@
-.PHONY: clippy lint test
+.PHONY: bench bench-check bench-list bench-dry-run clippy lint test
+
+TIER ?= edit
+BENCH_ARGS = --tier "$(TIER)" $(if $(WORKLOAD),--workload "$(WORKLOAD)") $(if $(ALLOW_FULL),--allow-full)
+
+bench:
+	@mkdir -p .work/tmp
+	python3 examples/bench_driver.py $(BENCH_ARGS)
+
+bench-check:
+	python3 examples/bench_driver.py $(BENCH_ARGS) --check
+
+bench-list:
+	python3 examples/bench_driver.py --list
+
+bench-dry-run:
+	python3 examples/bench_driver.py $(BENCH_ARGS) --dry-run
 
 test:
 	@mkdir -p .work/tmp

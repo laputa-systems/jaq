@@ -1,5 +1,5 @@
 Prefix: DSLP
-Next: 7
+Next: 8
 
 Deslop campaign backlog ([plan](https://github.com/laputa-systems/stuff/blob/main/docs/campaigns/deslop.md), tier E). One agent works this file with the `deslop` skill: take the lowest-numbered open ticket whose area does not start with `Needs owner ·`. After DSLP-5, work the open P1 and P2 findings, then fill in `## Report` below.
 
@@ -13,14 +13,16 @@ Tests: workspace tests increased from 386 to 388. Reported suite execution sums 
 
 Dead code: rustc `dead_code` is covered by warnings-denied workspace clippy; a separate `unreachable_pub` check reported 13 CLI and 35 library diagnostics on upstream declarations. No fork-owned removal was established, and no code or dependencies were removed. Needs environment: cargo-machete and cargo-udeps are unavailable. The upstream `jaq/tests/repl.exp` fixture has no remaining registration after this fork removed the filter; it is outside the authorized edit scope.
 
+Bench: the upstream harness covers startup, definitions and synthetic filter workloads; it lacks completed-output checks, representative file/format journeys, memory and attribution. The new entry point checks selection in Edit (0.08s observed) and exercises the existing `upto` fixture in Change (0.48s observed, release build 380.51s); a wrong-output fault failed as intended. Host readiness checks passed around that one run, which is not a performance verdict. Full was not run and requires explicit opt-in on Linux. DSLP-7 tracks the remaining coverage and observability gaps.
+
 ## Tickets
 
-### DSLP-6 · P2 · Bench: audit and selective entry point
+### DSLP-7 · P3 · Add representative performance outcomes and attribution
 
-- **Area:** deslop · bench
-- **Where:** bench.sh, examples/benches.json, Makefile
-- **Problem:** The existing upstream benchmark harness has not been audited or given a selective entry point in this fork.
-- **Recommendation:** Run the deslop Bench step, preserving upstream code and proving Edit and one Change workload.
-- **Fix with:** deslop
+- **Area:** performance · benchmarks
+- **Where:** bench.sh, examples/benches.json
+- **Problem:** The upstream harness times synthetic filters and startup but does not assert completed outputs or cover representative file and format journeys, memory, or attribution; it also depends on GNU time and its shell loops can mask failures.
+- **Recommendation:** Design representative CLI and library workloads with output oracles and CPU, memory, and attribution evidence; preserve the existing public behavior.
+- **Fix with:** bench-pyramid
 - **Effort:** M
 

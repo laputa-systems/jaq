@@ -37,4 +37,4 @@ jq implementation in this workspace. The CLI crate is `jaq`. The libraries are `
 - CBOR, TOML and XML: `jaq-fmts/tests/formats.rs`; other formats: `jaq-fmts/tests/funs.rs`.
 - Module search path expansion: `jaq/tests/distribution.rs`.
 - Library consumers include `jaq`, `jaq-play`, and the other workspace crates.
-- Performance workload: `bench.sh` and `examples/benches.json`; no regression gate.
+- Performance: `make bench` checks selection; `make bench TIER=change WORKLOAD=upto` runs a bounded release workload. No regression gate.

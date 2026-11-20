@@ -88,6 +88,17 @@ Windows is not a supported target.
 The table that used to be here was measured on upstream jaq 3.0, which linked mimalloc.
 This tree uses the system allocator and does not include that table.
 
+`make bench` checks the benchmark driver's selection rules. `make bench-list`
+lists its tiers, and `make bench-dry-run TIER=change WORKLOAD=upto` prints a
+selection without running it. Build the binary with `cargo build --release
+--locked -p jaq`, then use `make bench-check TIER=change WORKLOAD=upto` and
+`make bench TIER=change WORKLOAD=upto` for the bounded array workload. Results
+are written under `.work/tmp`; completion alone is not a performance verdict.
+On the observed macOS arm64 run, Edit took 0.08s and Change took 0.48s after
+the release build; build time was 380.51s on a busy host.
+The upstream full harness requires Linux and runs only by explicit request with
+`make bench TIER=full ALLOW_FULL=1`. It has no output oracle or regression gate.
+
 
 # Security
 
