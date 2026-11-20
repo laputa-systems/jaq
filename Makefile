@@ -1,4 +1,8 @@
-.PHONY: clippy lint
+.PHONY: clippy lint test
+
+test:
+	@mkdir -p .work/tmp
+	TMPDIR="$(CURDIR)/.work/tmp" cargo test --workspace --locked
 
 clippy:
 	@mkdir -p .work/tmp

@@ -9,15 +9,6 @@ Not started.
 
 ## Tickets
 
-### DSLP-1 · P2 · Ground: baseline, boundaries, and CI test entry point
-
-- **Area:** deslop · ground
-- **Where:** AGENTS.md, Makefile, .github/workflows/
-- **Problem:** Base b011a1ca; code lines Rust 11.4k (fleet/loc/v1, vendored included); timings not yet measured. Fork of 01mf02/jaq (main); work only our changes against the upstream merge base (+55/-237); upstream code stays untouched. CI does not run make test: runs tests directly on pull requests; run make test or make test-ci instead so CI and local verification share one entry point. The root Makefile has no test target. Open fleet lint findings: binary-release-static 1, make-clean-target 1, owned-tool-support 1. Perf gate: decide in Ground whether a user-visible hot path needs a workload.
-- **Recommendation:** Run the deslop Ground step. Accept: CI runs make test and is green, and AGENTS.md has a Verification section.
-- **Fix with:** deslop
-- **Effort:** S
-
 ### DSLP-2 · P2 · Diagnose: ultrareview into this backlog
 
 - **Area:** deslop · diagnose
