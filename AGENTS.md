@@ -25,6 +25,8 @@ jq implementation in this workspace. The CLI crate is `jaq`. The libraries are `
 
 ## Verification
 
+`make clean` removes this checkout’s build output in `./target`. It refuses symlinks and ordinary files at those paths.
+
 - `make test` checks the default CLI and runs the workspace tests (388 passed; 30.74s on a busy host).
 - `make lint` runs workspace clippy with warnings denied (cold 492.76s on a busy host).
 - Edit: `cargo test --locked -p jaq --test distribution` checks module lookup (0.26s test time).
